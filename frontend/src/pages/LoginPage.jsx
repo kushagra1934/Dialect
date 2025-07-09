@@ -1,10 +1,9 @@
 import React from "react";
 import { useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
-import { login } from "../lib/api";
+
 import { Languages } from "lucide-react";
 import { Link } from "react-router";
+import useLogin from "../hooks/useLogin";
 
 const LoginPage = () => {
   const [loginData, setLoginData] = useState({
@@ -12,15 +11,19 @@ const LoginPage = () => {
     password: "",
   });
 
-  const queryClient = useQueryClient();
-  const {
-    mutate: loginMutation,
-    isPending,
-    error,
-  } = useMutation({
-    mutationFn: login,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["authUser"] }),
-  });
+
+  //this is what i did without using custom hook, but as we have to use mutation everytime, i used custom hook
+  //   const queryClient = useQueryClient();
+  //   const {
+  //     mutate: loginMutation,
+  //     isPending,
+  //     error,
+  //   } = useMutation({
+  //     mutationFn: login,
+  //     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["authUser"] }),
+  //   });
+
+  const { isPending, error, loginMutation } = useLogin();
 
   const handleLogin = (e) => {
     e.preventDefault();

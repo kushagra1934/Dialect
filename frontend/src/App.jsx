@@ -17,8 +17,11 @@ import PageLoader from "./components/PageLoader.jsx";
 // import { getAuthUser } from "./lib/api.js";
 import useAuthUser from "./hooks/useAuthUser.js";
 import { Home } from "lucide-react";
+import Layout from "./components/Layout.jsx";
+import { useThemeStore } from "./store/useThemeStore.js";
 
 const App = () => {
+  const { theme } = useThemeStore();
   // axios
   // react query, tanstack query
   const { isLoading, authUser } = useAuthUser();
@@ -28,14 +31,16 @@ const App = () => {
   if (isLoading) return <PageLoader />;
 
   return (
-    <div className="h-screen" data-theme="night">
+    <div className="h-screen" data-theme={theme}>
       {/* <button onClick={()=>toast.success("Hello")}>Create a toast</button> */}
       <Routes>
         <Route
           path="/"
           element={
             isAuthenticated && isOnboarded ? (
-              <HomePage />
+              <Layout showSidebar={true}>
+                <HomePage />
+              </Layout>
             ) : (
               <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
             )
